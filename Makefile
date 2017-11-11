@@ -29,13 +29,24 @@ all: $(TARGET_SWF)
 
 # $(MXMLC) -debug=false -static-link-runtime-shared-libraries=true -optimize=true -o recorder.swf -file-specs flash/FlashRecorder.as
 $(TARGET_SWF): $(BIN) $(SRC)/$(TARGET).as
-	$(MXMLC) -debug=false -static-link-runtime-shared-libraries=true -optimize=true -o $@ -file-specs $(SRC)/$(TARGET).as
+	$(MXMLC) -debug=true -static-link-runtime-shared-libraries=false -optimize=false -o $@ -file-specs $(SRC)/$(TARGET).as
 
 $(BIN):
 	mkdir -p $@
 
-run: $(TARGET_SWF)
-	$(PLAYER) $(TARGET_SWF)
+DECOMPRESSED_SWF := $(BIN)/$(TARGET)_decompressed.swf
+$(DECOMPRESSED_SWF): $(TARGET_SWF)
+	swfcombine -d $(TARGET_SWF) -o $@
+
+decompress: $(DECOMPRESSED_SWF)
+
+run: $(DECOMPRESSED_SWF)
+	$(PLAYER) $(DECOMPRESSED_SWF)
+
+convert: $(TARGET_SWF)
+	vlc \
+		-I dummy -vvv swf/hearts.swf \
+		--sout=#transcode{vcodec=h264,vb=1024,acodec=mp4a,ab=192,channels=2,deinterlace}:standard{access=file,mux=ts,dst=MyVid.mp4}
 
 clean:
 	rm -fr $(BIN)

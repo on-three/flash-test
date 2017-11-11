@@ -19,6 +19,10 @@ MXMLC := $(FLEX_TOOLS)/mxmlc
 # compc is used to compile .swc libraries from .as and maybe mxml files
 # .swc libraries are really just .swf files zipped up with some xml
 COMPC := $(FLEX_TOOLS)/compc
+# standalone flash player for quick testing
+# player (projector) available at:
+# http://www.adobe.com/support/flashplayer/debug_downloads.html
+PLAYER := /home/on-three/local/flash/flashplayer
 
 all: $(TARGET_SWF)
 
@@ -29,6 +33,9 @@ $(TARGET_SWF): $(BIN) $(SRC)/$(TARGET).as
 
 $(BIN):
 	mkdir -p $@
+
+run: $(TARGET_SWF)
+	$(PLAYER) $(TARGET_SWF)
 
 clean:
 	rm -fr $(BIN)

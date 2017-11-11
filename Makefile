@@ -55,7 +55,7 @@ $(TARGET_MP4): $(TARGET_SWF)
 	dump-gnash -1 -r 1 -D $(TMP_BIN_VIDEO) $(TARGET_SWF)
 	mplayer $(TMP_BIN_VIDEO) -vo yuv4mpeg:file=$(TARGET_MP4) \
 		-demuxer rawvideo -rawvideo \
-		fps=24:w=500:h=500:format=bgra
+		fps=100:w=30:h=30:format=bgra
 
 convert: $(TARGET_MP4)
 
